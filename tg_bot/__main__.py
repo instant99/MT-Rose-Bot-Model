@@ -19,36 +19,35 @@ from tg_bot.modules.helper_funcs.misc import paginate_modules
 
 PM_START_TEXT = """
 
-*ഹായ് {}, എന്റെ പേര് {}!*
+*Привет {}, Моё имя {}!*
 
-*ഞാൻ* [ഇദ്ദേഹം](tg://user?id={}) *നോക്കി നടത്തുന്ന ഒരു അടിപൊളി അഡ്മിൻ ബോട്ടാണ്.*
+*Я* [Он один](tg://user?id={}) *Это замечательная административная лодка..*
 
-*എന്നെ നിർമ്മിച്ചിരിക്കുന്നത് python3 യിൽ python-telegram-bot ലൈബ്രറി ഉപയോഗിച്ചാണ്. ഞാൻ പൂർണ്ണമായിട്ടും ഓപ്പൺസോഴ്സ്ഡ് ആണ്. എന്റെ കോഡ് നിങ്ങൾക്ക് തായ കാണുവാൻ സാധിക്കും.*
+*Я сделан python3 В python-telegram-bot Использование библиотеки. Я полностью с открытым исходным кодом. Вы можете увидеть мой код.*
 
-*എന്നെപ്പോലെ ഒരു അഡ്മിൻ ബോട്ടിനെ ഉണ്ടാക്കുവാൻ താഴെ കൊടുത്തിരിക്കുന്ന വീഡിയോ കാണുക.*
+*Посмотрите видео ниже, чтобы сделать лодку администратора похожей на меня.*
 
-*എന്റെ അപ്ഡേറ്റുകളെക്കുറിച്ചും പ്രവർത്തനത്തെപറ്റിയും അറിയുവാൻ അപ്ഡേറ്റ് ചാനൽ സബ്സ്ക്രൈബ് ചെയ്യുക.*
+*Подпишитесь на канал обновлений, чтобы узнавать о моих обновлениях и действиях.*
 
-*ലഭ്യമായ കമാന്റുകളെപ്പറ്റി അറിയുവാൻ /help അമർത്തുക.*
+*Чтобы узнать о доступных командах напишите /help *
 
 """
 
 HELP_STRINGS = """
-Hey there! My name is *{}*.
+Эй, там! Меня зовут *{}*.
 
-*Main* commands available:
- - /start: start the bot
- - /help: PM's you this message.
- - /help <module name>: PM's you info about that module.
- - /donate: information about how to donate!
+*Главные* доступные команды:
+ - /start: запустить бота
+ - /help: PM's you это сообщение.
+ - /help <module name>: Вы получите информацию об этом модуле в ЛС.
  - /settings:
-   - in PM: will send you your settings for all supported modules.
-   - in a group: will redirect you to pm, with all that chat's settings.
+   - в ЛС: вышлет вам настройки для всех поддерживаемых модулей.
+   - в группе: перенаправит вас на ЛС, со всеми настройками чата.
 {}
 And the following:
 """.format(dispatcher.bot.first_name, "" if not ALLOW_EXCL else "\nAll commands can either be used with / or !.\n")
 
-DONATE_STRING = """ *🙋‍♂️Hello Bro or Sis*!
+DONATE_STRING = """ *🙋‍♂️Привет Бро или Сис*!
 
 *😎Contect @Mrk_YT*
 
@@ -150,9 +149,8 @@ def start(bot: Bot, update: Update, args: List[str]):
                 PM_START_TEXT.format(escape_markdown(first_name), escape_markdown(bot.first_name), OWNER_ID),
 
                 parse_mode=ParseMode.MARKDOWN, reply_markup=InlineKeyboardMarkup(
-                    [[InlineKeyboardButton(text="⭕️ Command Help ⭕️", url="https://t.me/{}?start=help".format(bot.username))],
-                     [InlineKeyboardButton(text="📢Updates", url="t.me/mo_tech_yt"), InlineKeyboardButton(text="❣️Video", url="https://youtu.be/wKL90i3cjPw"), InlineKeyboardButton(text="🤠Credits", url="https://github.com/jithumon/tgbot/graphs/contributors")],
-                     [InlineKeyboardButton(text="➕ Add me to your group ➕", url="t.me/{}?startgroup=true".format(bot.username)) ]]))
+                    [[InlineKeyboardButton(text="⭕️ Помощь по командам ⭕️", url="https://t.me/{}?start=help".format(bot.username))],
+                     [InlineKeyboardButton(text="📢Обновление прошивок", url="t.me/r9_pro"), InlineKeyboardButton(text="❣️Наш чат", url="t.me/r9_rus"), InlineKeyboardButton(text="🤠Исходники бота", url="https://github.com/jithumon/tgbot/graphs/contributors")],
     else:
         update.effective_message.reply_text("ചത്തിട്ടില്ലാ...")
 

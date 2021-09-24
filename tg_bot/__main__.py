@@ -19,39 +19,30 @@ from tg_bot.modules.helper_funcs.misc import paginate_modules
 
 PM_START_TEXT = """
 
-*Привет {}, Моё имя {}!*
-
-*Я* [Он один](tg://user?id={}) *Это замечательная административная лодка..*
-
-*Я сделан python3 В python-telegram-bot Использование библиотеки. Я полностью с открытым исходным кодом. Вы можете увидеть мой код.*
-
-*Посмотрите видео ниже, чтобы сделать лодку администратора похожей на меня.*
-
-*Подпишитесь на канал обновлений, чтобы узнавать о моих обновлениях и действиях.*
+*Привет {}, Моё имя: {}!*
 
 *Чтобы узнать о доступных командах напишите /help *
 
 """
 
 HELP_STRINGS = """
-Эй, там! Меня зовут *{}*.
+Привет! Меня зовут *{}* - я здесь, чтобы помочь вам управлять вашей группой!.
 
 *Главные* доступные команды:
  - /start: запустить бота
- - /help: PM's you это сообщение.
+ - /help: Вышлет в ЛС это сообщение.
  - /help <module name>: Вы получите информацию об этом модуле в ЛС.
  - /settings:
    - в ЛС: вышлет вам настройки для всех поддерживаемых модулей.
    - в группе: перенаправит вас на ЛС, со всеми настройками чата.
 {}
-And the following:
-""".format(dispatcher.bot.first_name, "" if not ALLOW_EXCL else "\nAll commands can either be used with / or !.\n")
+И следующее:
+""".format(dispatcher.bot.first_name, "" if not ALLOW_EXCL else "\nВсе команды можно использовать либо с / либо с !.\n")
 
-DONATE_STRING = """ *🙋‍♂️Привет Бро или Сис*!
+DONATE_STRING = """ *🙋‍♂️Привет всем*!
 
-*😎Contect @Mrk_YT*
+*😎Владелец бота: @Ghost552*
 
-*👉Clcik 👉 /donate*
 """
 
 IMPORTED = {}
@@ -150,8 +141,8 @@ def start(bot: Bot, update: Update, args: List[str]):
 
                 parse_mode=ParseMode.MARKDOWN, reply_markup=InlineKeyboardMarkup(
                     [[InlineKeyboardButton(text="⭕️ Помощь по командам ⭕️", url="https://t.me/{}?start=help".format(bot.username))],
-                     [InlineKeyboardButton(text="📢Обновление прошивок", url="t.me/r9_pro"), InlineKeyboardButton(text="❣️Наш чат", url="t.me/r9_rus"), InlineKeyboardButton(text="🤠Исходники бота", url="https://github.com/jithumon/tgbot/graphs/contributors")],
-                     [InlineKeyboardButton(text="➕ Add me to your group ➕", url="t.me/{}?startgroup=true".format(bot.username)) ]]))
+                     [InlineKeyboardButton(text="📢Прошивки", url="t.me/r9_pro"), InlineKeyboardButton(text="❣️Наш чат", url="t.me/r9_rus"), InlineKeyboardButton(text="🤠Исходники", url="https://github.com/jithumon/tgbot/graphs/contributors")],
+                     [InlineKeyboardButton(text="➕ Добавить меня в группу ➕", url="t.me/{}?startgroup=true".format(bot.username)) ]]))
     else:
         update.effective_message.reply_text("ചത്തിട്ടില്ലാ...")
 
@@ -383,8 +374,8 @@ def donate(bot: Bot, update: Update):
         update.effective_message.reply_text(DONATE_STRING, parse_mode=ParseMode.MARKDOWN, disable_web_page_preview=True)
 
         if OWNER_ID != 254318997 and DONATION_LINK:
-            update.effective_message.reply_text("**You can also donate to the person currently running me** "
-                                                "[👤here]({})".format(DONATION_LINK),
+            update.effective_message.reply_text("**Наш чат для обсуждения телефона Redmi 9** "
+                                                "[здесь]({})".format(DONATION_LINK),
                                                 parse_mode=ParseMode.MARKDOWN)
 
     else:

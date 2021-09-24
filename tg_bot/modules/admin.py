@@ -255,16 +255,16 @@ def __chat_settings__(chat_id, user_id):
 
 
 __help__ = """
-Lazy to promote or demote someone for admins? Want to see basic information about chat? \
-All stuff about chatroom such as admin lists, pinning or grabbing an invite link can be \
-done easily using the bot.
+Лень повышать или понижать кого-то для администраторов? Хотите увидеть основную информацию о чате? \
+Все, что касается чата, например списки администраторов, закрепление или захват ссылки приглашения, может быть \
+легко делается с помощью бота.
 
- - /adminlist: list of admins and members in the chat
- - /staff: same as /adminlist
- - /link: get the group link for this chat.
- - #link: same as /link
+ - /adminlist: список администраторов и участников в чате
+ - /staff: то же, что и /adminlist
+ - /link: получить ссылку на группу для этого чата.
+ - #link: то же, что и /link
 
-*Admin only:*
+*Только для администраторов:*
  - /pin: Безшумно закрепить отвеченое сообщение - добавьте аргумент 'loud' или 'notify' чтобы уведомить пользователей о закреплении.
  - /unpin: Открепить текущее закрепренное сообщение.
  - /invitelink: Получить ссылку-приглашение.

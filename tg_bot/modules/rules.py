@@ -25,30 +25,30 @@ def send_rules(update, chat_id, from_pm=False):
     try:
         chat = bot.get_chat(chat_id)
     except BadRequest as excp:
-        if excp.message == "Chat not found" and from_pm:
-            bot.send_message(user.id, "The rules shortcut for this chat hasn't been set properly! Ask admins to "
-                                      "fix this.")
+        if excp.message == "Чат не найден" and from_pm:
+            bot.send_message(user.id, "Ярлык правил для этого чата не был установлен должным образом! Попросите администраторов "
+                                      "исправить это.")
             return
         else:
             raise
 
     rules = sql.get_rules(chat_id)
-    text = "The rules for *{}* are:\n\n{}".format(escape_markdown(chat.title), rules)
+    text = "Правила для *{}* являются:\n\n{}".format(escape_markdown(chat.title), rules)
 
     if from_pm and rules:
         bot.send_message(user.id, text, parse_mode=ParseMode.MARKDOWN)
     elif from_pm:
-        bot.send_message(user.id, "The group admins haven't set any rules for this chat yet. "
-                                  "This probably doesn't mean it's lawless though...!")
+        bot.send_message(user.id, "Администраторы группы еще не установили никаких правил для этого чата. "
+                                  "Это, вероятно, не означает, что чат беззаконен, хотя..!")
     elif rules:
-        update.effective_message.reply_text("Contact me in PM to get this group's rules.",
+        update.effective_message.reply_text("Свяжитесь со мной в ЛС, чтобы получить правила этой группы.",
                                             reply_markup=InlineKeyboardMarkup(
-                                                [[InlineKeyboardButton(text="Rules",
+                                                [[InlineKeyboardButton(text="Правила",
                                                                        url="t.me/{}?start={}".format(bot.username,
                                                                                                      chat_id))]]))
     else:
-        update.effective_message.reply_text("The group admins haven't set any rules for this chat yet. "
-                                            "This probably doesn't mean it's lawless though...!")
+        update.effective_message.reply_text("Администраторы группы еще не установили никаких правил для этого чата. "
+                                            "Это, вероятно, не означает, что чат беззаконен, хотя..!")
 
 
 @run_async
@@ -64,7 +64,7 @@ def set_rules(bot: Bot, update: Update):
         markdown_rules = markdown_parser(txt, entities=msg.parse_entities(), offset=offset)
 
         sql.set_rules(chat_id, markdown_rules)
-        update.effective_message.reply_text("Successfully set rules for this group.")
+        update.effective_message.reply_text("Успешно установлены правила для этой группы.")
 
 
 @run_async
@@ -72,11 +72,11 @@ def set_rules(bot: Bot, update: Update):
 def clear_rules(bot: Bot, update: Update):
     chat_id = update.effective_chat.id
     sql.set_rules(chat_id, "")
-    update.effective_message.reply_text("Successfully cleared rules!")
+    update.effective_message.reply_text("Правила успешно очищены!")
 
 
 def __stats__():
-    return "{} chats have rules set.".format(sql.num_chats())
+    return "{} чаты имеют установленные правила.".format(sql.num_chats())
 
 
 def __import_data__(chat_id, data):
@@ -90,7 +90,7 @@ def __migrate__(old_chat_id, new_chat_id):
 
 
 def __chat_settings__(chat_id, user_id):
-    return "This chat has had it's rules set: `{}`".format(bool(sql.get_rules(chat_id)))
+    return "В этом чате установлены правила: `{}`".format(bool(sql.get_rules(chat_id)))
 
 
 __help__ = """

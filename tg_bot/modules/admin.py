@@ -30,16 +30,16 @@ def promote(bot: Bot, update: Update, args: List[str]) -> str:
 
     user_id = extract_user(message, args)
     if not user_id:
-        message.reply_text("You don't seem to be referring to a user.")
+        message.reply_text("Похоже, вы не ссылаетесь на пользователя.")
         return ""
 
     user_member = chat.get_member(user_id)
     if user_member.status == 'administrator' or user_member.status == 'creator':
-        message.reply_text("How am I meant to promote someone that's already an admin?")
+        message.reply_text("Как я должен повышать кого-то, кто уже является администратором?")
         return ""
 
     if user_id == bot.id:
-        message.reply_text("I can't promote myself! Get an admin to do it for me.")
+        message.reply_text("Я не могу повысить себя! Попросите администратора сделать это за меня.")
         return ""
 
     # set same perms as bot - bot can't assign higher perms than itself!
@@ -55,11 +55,11 @@ def promote(bot: Bot, update: Update, args: List[str]) -> str:
                           can_pin_messages=bot_member.can_pin_messages,
                           can_promote_members=bot_member.can_promote_members)
 
-    message.reply_text("Successfully promoted!")
+    message.reply_text("Успешно повышен!")
     return "<b>{}:</b>" \
-           "\n#PROMOTED" \
-           "\n<b>Admin:</b> {}" \
-           "\n<b>User:</b> {}".format(html.escape(chat.title),
+           "\n#Повышен" \
+           "\n<b>Админ:</b> {}" \
+           "\n<b>Пользователь:</b> {}".format(html.escape(chat.title),
                                       mention_html(user.id, user.first_name),
                                       mention_html(user_member.user.id, user_member.user.first_name))
 
@@ -76,20 +76,20 @@ def demote(bot: Bot, update: Update, args: List[str]) -> str:
 
     user_id = extract_user(message, args)
     if not user_id:
-        message.reply_text("You don't seem to be referring to a user.")
+        message.reply_text("Похоже, вы не ссылаетесь на пользователя.")
         return ""
 
     user_member = chat.get_member(user_id)
     if user_member.status == 'creator':
-        message.reply_text("This person CREATED the chat, how would I demote them?")
+        message.reply_text("Этот человек СОЗДАЛ чат, как бы я понизил их в должности?")
         return ""
 
     if not user_member.status == 'administrator':
-        message.reply_text("Can't demote what wasn't promoted!")
+        message.reply_text("Не могу понизить того, кто не был повышен!")
         return ""
 
     if user_id == bot.id:
-        message.reply_text("I can't demote myself! Get an admin to do it for me.")
+        message.reply_text("Я не могу понизить себя в должности! Попросите администратора сделать это за меня.")
         return ""
 
     try:
@@ -102,17 +102,17 @@ def demote(bot: Bot, update: Update, args: List[str]) -> str:
                               can_restrict_members=False,
                               can_pin_messages=False,
                               can_promote_members=False)
-        message.reply_text("Successfully demoted!")
+        message.reply_text("Успешно понижен!")
         return "<b>{}:</b>" \
-               "\n#DEMOTED" \
-               "\n<b>Admin:</b> {}" \
-               "\n<b>User:</b> {}".format(html.escape(chat.title),
+               "\n#Понижен" \
+               "\n<b>Админ:</b> {}" \
+               "\n<b>Пользователь:</b> {}".format(html.escape(chat.title),
                                           mention_html(user.id, user.first_name),
                                           mention_html(user_member.user.id, user_member.user.first_name))
 
     except BadRequest:
-        message.reply_text("Could not demote. I might not be admin, or the admin status was appointed by another "
-                           "user, so I can't act upon them!")
+        message.reply_text("Не удалось понизить в должности. Возможно, я не администратор, или статус администратора был назначен другим "
+                           "пользователем, поэтому я не могу действовать в соответствии с ними!")
         return ""
 
 
@@ -142,8 +142,8 @@ def pin(bot: Bot, update: Update, args: List[str]) -> str:
             else:
                 raise
         return "<b>{}:</b>" \
-               "\n#PINNED" \
-               "\n<b>Admin:</b> {}".format(html.escape(chat.title), mention_html(user.id, user.first_name))
+               "\n#Закреплен" \
+               "\n<b>Админ:</b> {}".format(html.escape(chat.title), mention_html(user.id, user.first_name))
 
     return ""
 
@@ -166,8 +166,8 @@ def unpin(bot: Bot, update: Update) -> str:
             raise
 
     return "<b>{}:</b>" \
-           "\n#UNPINNED" \
-           "\n<b>Admin:</b> {}".format(html.escape(chat.title),
+           "\n#Откреплен" \
+           "\n<b>Админ:</b> {}".format(html.escape(chat.title),
                                        mention_html(user.id, user.first_name))
 
 @run_async
@@ -183,14 +183,14 @@ def invite(bot: Bot, update: Update):
         bot_member = chat.get_member(bot.id)
         if bot_member.can_invite_users:
             invitelink = bot.exportChatInviteLink(chat.id)
-            linktext = "Successfully generated new link for *{}:*".format(chat.title)
+            linktext = "Успешно сгенерирована новая ссылка для *{}:*".format(chat.title)
             link = "`{}`".format(invitelink)
             message.reply_text(linktext, parse_mode=ParseMode.MARKDOWN, disable_web_page_preview=True)
             message.reply_text(link, parse_mode=ParseMode.MARKDOWN, disable_web_page_preview=True)
         else:
-            message.reply_text("I don't have access to the invite link, try changing my permissions!")
+            message.reply_text("У меня нет доступа к ссылке приглашения, Попробуйте изменить мои права!")
     else:
-        message.reply_text("I can only give you invite links for supergroups and channels, sorry!")
+        message.reply_text("Я могу дать вам только пригласить ссылки для супергрупп и каналов, извините!")
 
 @run_async
 def link_public(bot: Bot, update: Update):
@@ -201,13 +201,13 @@ def link_public(bot: Bot, update: Update):
     
     if chat.type == chat.SUPERGROUP or chat.type == chat.CHANNEL:
         if invitelink:
-            message.reply_text("Link of *{}*:\n`{}`".format(chat.title, invitelink), parse_mode=ParseMode.MARKDOWN)
+            message.reply_text("Ссылка на *{}*:\n`{}`".format(chat.title, invitelink), parse_mode=ParseMode.MARKDOWN)
         else:
-            message.reply_text("The admins of *{}* haven't set link."
-                               " \nLink can be set by following: `/setlink` and get link of chat "
+            message.reply_text("Администраторы *{}* не установили ссылку."
+                               " \nСсылку можно установить, выполнив следующие действия: `/setlink` и получите ссылку чата "
                                "using /invitelink, paste the link after `/setlink` append.".format(chat.title), parse_mode=ParseMode.MARKDOWN)
     else:
-        message.reply_text("I can only can save links for supergroups and channels, sorry!")
+        message.reply_text("Я могу только сохранять ссылки для супергрупп и каналов, извините!")
 
 @run_async
 @user_admin
@@ -222,7 +222,7 @@ def set_link(bot: Bot, update: Update):
         links_text = args[1]
 
         sql.set_link(chat_id, links_text)
-        msg.reply_text("The link has been set for {}!\nRetrieve link by #link".format((chat.title)))
+        msg.reply_text("Ссылка установлена для {}!\nПолучить ссылку можно с помощью #link".format((chat.title)))
 
 
 @run_async
@@ -230,13 +230,13 @@ def set_link(bot: Bot, update: Update):
 def clear_link(bot: Bot, update: Update):
     chat_id = update.effective_chat.id
     sql.set_link(chat_id, "")
-    update.effective_message.reply_text("Successfully cleared link!")
+    update.effective_message.reply_text("Ссылка успешно очищена!")
 
 
 @run_async
 def adminlist(bot: Bot, update: Update):
     administrators = update.effective_chat.get_administrators()
-    text = "Admins in *{}*:".format(update.effective_chat.title or "this chat")
+    text = "Админ в *{}*:".format(update.effective_chat.title or "этот чате")
     for admin in administrators:
         user = admin.user
         name = "[{}](tg://user?id={})".format(user.first_name + (user.last_name or ""), user.id)
@@ -250,7 +250,7 @@ def __stats__():
     return "{} chats have links set.".format(sql.num_chats())
 
 def __chat_settings__(chat_id, user_id):
-    return "You are *admin*: `{}`".format(
+    return "Вы *админ*: `{}`".format(
         dispatcher.bot.get_chat_member(chat_id, user_id).status in ("administrator", "creator"))
 
 
@@ -265,19 +265,14 @@ done easily using the bot.
  - #link: same as /link
 
 *Admin only:*
- - /pin: silently pins the message replied to - add 'loud' or 'notify' to give notifies to users.
- - /unpin: unpins the currently pinned message.
- - /invitelink: generates new invite link.
- - /setlink <your group link here>: set the group link for this chat.
- - /clearlink: clear the group link for this chat.
- - /promote: promotes the user replied to
- - /demote: demotes the user replied to
+ - /pin: Безшумно закрепить отвеченое сообщение - добавьте аргумент 'loud' или 'notify' чтобы уведомить пользователей о закреплении.
+ - /unpin: Открепить текущее закрепренное сообщение.
+ - /invitelink: Получить ссылку-приглашение.
+ - /setlink <ссылка: установите ссылку на группу для этого чата.
+ - /clearlink: очистите ссылку на группу для этого чата.
+ - /promote: Повысить пользователя.
+ - /demote: Понизить пользователя
  
- An example of set a link:
-`/setlink https://t.me/joinchat/HwiIk1RADK5gRMr9FBdOrwtae`
-
-An example of promoting someone to admins:
-`/promote @username`; this promotes a user to admins.
 """
 
 __mod_name__ = "Admin"

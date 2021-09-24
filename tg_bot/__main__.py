@@ -31,7 +31,7 @@ HELP_STRINGS = """
 *Главные* доступные команды:
  - /start: запустить бота
  - /help: Вышлет в ЛС это сообщение.
- - /help <module name>: Вы получите информацию об этом модуле в ЛС.
+ - /help <название модуля>: Вы получите информацию об этом модуле в ЛС.
  - /settings:
    - в ЛС: вышлет вам настройки для всех поддерживаемых модулей.
    - в группе: перенаправит вас на ЛС, со всеми настройками чата.
@@ -186,7 +186,7 @@ def help_button(bot: Bot, update: Update):
     try:
         if mod_match:
             module = mod_match.group(1)
-            text = "Here is the help for the *{}* module:\n".format(HELPABLE[module].__mod_name__) \
+            text = "Здесь написаны команды для *{}* модуля:\n".format(HELPABLE[module].__mod_name__) \
                    + HELPABLE[module].__help__
             query.message.reply_text(text=text,
                                      parse_mode=ParseMode.MARKDOWN,

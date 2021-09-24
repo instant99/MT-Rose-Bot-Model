@@ -151,6 +151,7 @@ def start(bot: Bot, update: Update, args: List[str]):
                 parse_mode=ParseMode.MARKDOWN, reply_markup=InlineKeyboardMarkup(
                     [[InlineKeyboardButton(text="⭕️ Помощь по командам ⭕️", url="https://t.me/{}?start=help".format(bot.username))],
                      [InlineKeyboardButton(text="📢Обновление прошивок", url="t.me/r9_pro"), InlineKeyboardButton(text="❣️Наш чат", url="t.me/r9_rus"), InlineKeyboardButton(text="🤠Исходники бота", url="https://github.com/jithumon/tgbot/graphs/contributors")],
+                     [InlineKeyboardButton(text="➕ Add me to your group ➕", url="t.me/{}?startgroup=true".format(bot.username)) ]]))
     else:
         update.effective_message.reply_text("ചത്തിട്ടില്ലാ...")
 

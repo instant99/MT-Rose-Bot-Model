@@ -27,16 +27,16 @@ def allow_connections(bot: Bot, update: Update, args: List[str]) -> str:
             print(var)
             if (var == "no"):
                 sql.set_allow_connect_to_chat(chat.id, False)
-                update.effective_message.reply_text("Disabled connections to this chat for users")
+                update.effective_message.reply_text("Отключены соединения к этому чату для пользователей")
             elif(var == "yes"):
                 sql.set_allow_connect_to_chat(chat.id, True)
-                update.effective_message.reply_text("Enabled connections to this chat for users")
+                update.effective_message.reply_text("Включены соединения к этому чату для пользователей")
             else:
-                update.effective_message.reply_text("Please enter on/yes/off/no in group!")
+                update.effective_message.reply_text("Пожалуйста введите on/yes/off/no в группу!")
         else:
-            update.effective_message.reply_text("Please enter on/yes/off/no in group!")
+            update.effective_message.reply_text("Пожалуйста введите on/yes/off/no в группу!")
     else:
-        update.effective_message.reply_text("Please enter on/yes/off/no in group!")
+        update.effective_message.reply_text("Пожалуйста введите on/yes/off/no в группу!")
 
 
 @run_async
@@ -48,7 +48,7 @@ def connect_chat(bot, update, args):
             try:
                 connect_chat = int(args[0])
             except ValueError:
-                update.effective_message.reply_text("Invalid Chat ID provided!")
+                update.effective_message.reply_text("Предоставлен неверный идентификатор чата!")
             if (bot.get_chat_member(connect_chat, update.effective_message.from_user.id).status in ('administrator', 'creator') or 
                                      (sql.allow_connect_to_chat(connect_chat) == True) and 
                                      bot.get_chat_member(connect_chat, update.effective_message.from_user.id).status in ('member')) or (
@@ -57,7 +57,7 @@ def connect_chat(bot, update, args):
                 connection_status = sql.connect(update.effective_message.from_user.id, connect_chat)
                 if connection_status:
                     chat_name = dispatcher.bot.getChat(connected(bot, update, chat, user.id, need_admin=False)).title
-                    update.effective_message.reply_text("Successfully connected to *{}*".format(chat_name), parse_mode=ParseMode.MARKDOWN)
+                    update.effective_message.reply_text("Успешно подключено к *{}*".format(chat_name), parse_mode=ParseMode.MARKDOWN)
 
                     #Add chat to connection history
                     history = sql.get_history(user.id)
@@ -95,29 +95,29 @@ def connect_chat(bot, update, args):
                     keyboard(bot, update)
                     
                 else:
-                    update.effective_message.reply_text("Connection failed!")
+                    update.effective_message.reply_text("Подключение не удалось!")
             else:
-                update.effective_message.reply_text("Connections to this chat not allowed!")
+                update.effective_message.reply_text("Подключение к этому чату не разрешено!")
         else:
-            update.effective_message.reply_text("Input chat ID to connect!")
+            update.effective_message.reply_text("Введите идентификатор чата для подключения!")
             history = sql.get_history(user.id)
             print(history.user_id, history.chat_id1, history.chat_id2, history.chat_id3, history.updated)
 
     else:
-        update.effective_message.reply_text("Usage limited to PMs only!")
+        update.effective_message.reply_text("Использование ограничения только в личных сообщениях!")
 
 
 def disconnect_chat(bot, update):
     if update.effective_chat.type == 'private':
         disconnection_status = sql.disconnect(update.effective_message.from_user.id)
         if disconnection_status:
-            sql.disconnected_chat = update.effective_message.reply_text("Disconnected from chat!")
+            sql.disconnected_chat = update.effective_message.reply_text("Отключен от чата!")
             #Rebuild user's keyboard
             keyboard(bot, update)
         else:
-           update.effective_message.reply_text("Disconnection unsuccessfull!")
+           update.effective_message.reply_text("Отключение не удалось!")
     else:
-        update.effective_message.reply_text("Usage restricted to PMs only")
+        update.effective_message.reply_text("Использование ограничено только в ЛС")
 
 
 def connected(bot, update, chat, user_id, need_admin=True):
@@ -131,12 +131,12 @@ def connected(bot, update, chat, user_id, need_admin=True):
                 if bot.get_chat_member(conn_id, update.effective_message.from_user.id).status in ('administrator', 'creator') or user_id in SUDO_USERS:
                     return conn_id
                 else:
-                    update.effective_message.reply_text("You need to be a admin in a connected group!")
+                    update.effective_message.reply_text("Вы должны быть администратором в подключенной группе!")
                     exit(1)
             else:
                 return conn_id
         else:
-            update.effective_message.reply_text("Group changed rights connection or you are not admin anymore.\nI'll disconnect you.")
+            update.effective_message.reply_text("Подключение к группе изменено, или вы больше не являетесь администратором.\nЯ отключу вас.")
             disconnect_chat(bot, update)
             exit(1)
     else:
@@ -145,14 +145,22 @@ def connected(bot, update, chat, user_id, need_admin=True):
 
 
 __help__ = """
-Actions are available with connected groups:
- • View and edit notes
- • View and edit filters
- • More in future!
+Соединения можно использовать для контролирования группы с лички бота, это удобно чтобы не спамить в чат.
+Доступны действия с соедененными группами:
+ • Просмотр и редактирование заметок.
+ • Просмотр и редактирование фильтров.
+ • Просмотр и редактирование черного списка.
+ • Назначать/понижать пользователей.
+ • Просмотр списка админов, просмотр ссылки-приглашения.
+ • Включать/выключать комманды в чате
+ • Мутить/размутить пользователей в чате
+ • Ограничить пользователей в чате
+ • Больше в будущем!
 
- - /connect <chatid>: Connect to remote chat
- - /disconnect: Disconnect from chat
- - /allowconnect on/yes/off/no: Allow connect users to group
+
+ - /connection <chatid>: Подключится к группе.
+ - /disconnect: Отключится от группы.
+ - /allowconnect on/yes/off/no: Разрешить подключение пользователей к этой группе
 """
 
 __mod_name__ = "Connections"

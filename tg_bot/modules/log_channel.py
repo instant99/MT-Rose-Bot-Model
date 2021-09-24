@@ -24,8 +24,8 @@ if is_module_loaded(FILENAME):
             message = update.effective_message  # type: Optional[Message]
             if result:
                 if chat.type == chat.SUPERGROUP and chat.username:
-                    result += "\n<b>Link:</b> " \
-                              "<a href=\"http://telegram.me/{}/{}\">click here</a>".format(chat.username,
+                    result += "\n<b>Ссылка:</b> " \
+                              "<a href=\"http://telegram.me/{}/{}\">нажми здесь</a>".format(chat.username,
                                                                                            message.message_id)
                 log_chat = sql.get_chat_log_channel(chat.id)
                 if log_chat:
@@ -33,7 +33,7 @@ if is_module_loaded(FILENAME):
             elif result == "":
                 pass
             else:
-                LOGGER.warning("%s was set as loggable, but had no return statement.", func)
+                LOGGER.warning("%s был установлен как регистрируемый, но не имел оператора return.", func)
 
             return result
 
@@ -44,15 +44,15 @@ if is_module_loaded(FILENAME):
         try:
             bot.send_message(log_chat_id, result, parse_mode=ParseMode.HTML)
         except BadRequest as excp:
-            if excp.message == "Chat not found":
-                bot.send_message(orig_chat_id, "This log channel has been deleted - unsetting.")
+            if excp.message == "Чат не найден":
+                bot.send_message(orig_chat_id, "Этот канал журнала был удален - без настройки.")
                 sql.stop_chat_logging(orig_chat_id)
             else:
                 LOGGER.warning(excp.message)
                 LOGGER.warning(result)
-                LOGGER.exception("Could not parse")
+                LOGGER.exception("Не удалось разобрать")
 
-                bot.send_message(log_chat_id, result + "\n\nFormatting has been disabled due to an unexpected error.")
+                bot.send_message(log_chat_id, result + "\n\nФорматирование было отключено из-за непредвиденной ошибки.")
 
 
     @run_async
@@ -70,7 +70,7 @@ if is_module_loaded(FILENAME):
                 parse_mode=ParseMode.MARKDOWN)
 
         else:
-            message.reply_text("No log channel has been set for this group!")
+            message.reply_text("Для этой группы не задан канал журнала!")
 
 
     @run_async
@@ -79,35 +79,35 @@ if is_module_loaded(FILENAME):
         message = update.effective_message  # type: Optional[Message]
         chat = update.effective_chat  # type: Optional[Chat]
         if chat.type == chat.CHANNEL:
-            message.reply_text("Now, forward the /setlog to the group you want to tie this channel to!")
+            message.reply_text("Теперь перешлите /setlog в группу, с которой вы хотите связать этот канал!")
 
         elif message.forward_from_chat:
             sql.set_chat_log_channel(chat.id, message.forward_from_chat.id)
             try:
                 message.delete()
             except BadRequest as excp:
-                if excp.message == "Message to delete not found":
+                if excp.message == "Сообщение для удаления не найдено":
                     pass
                 else:
-                    LOGGER.exception("Error deleting message in log channel. Should work anyway though.")
+                    LOGGER.exception("Ошибка удаления сообщения в канале журнала. Должен работать в любом случае, хотя.")
 
             try:
                 bot.send_message(message.forward_from_chat.id,
-                                 "This channel has been set as the log channel for {}.".format(
+                                 "Этот канал был установлен как канал логов для {}.".format(
                                      chat.title or chat.first_name))
             except Unauthorized as excp:
-                if excp.message == "Forbidden: bot is not a member of the channel chat":
-                    bot.send_message(chat.id, "Successfully set log channel!")
+                if excp.message == "Запрещено: бот не является участником чата канала":
+                    bot.send_message(chat.id, "Успешно установлен канал логов!")
                 else:
-                    LOGGER.exception("ERROR in setting the log channel.")
+                    LOGGER.exception("ОШИБКА при настройке канала журнала.")
 
-            bot.send_message(chat.id, "Successfully set log channel!")
+            bot.send_message(chat.id, "Успешно установлен канал логов!")
 
         else:
-            message.reply_text("The steps to set a log channel are:\n"
-                               " - add bot to the desired channel\n"
-                               " - send /setlog to the channel\n"
-                               " - forward the /setlog to the group\n")
+            message.reply_text("Настройка канала для логирования:\n"
+                               " - Добавление бота в канал (Как админа!)\n"
+                               " - Отправка `/setlog` в канал\n"
+                               " - Пересылка отправленного сообщения `/setlog` в группе\n")
 
 
     @run_async
@@ -118,15 +118,15 @@ if is_module_loaded(FILENAME):
 
         log_channel = sql.stop_chat_logging(chat.id)
         if log_channel:
-            bot.send_message(log_channel, "Channel has been unlinked from {}".format(chat.title))
-            message.reply_text("Log channel has been un-set.")
+            bot.send_message(log_channel, "Канал отключен от{}".format(chat.title))
+            message.reply_text("Канал логов не установлен.")
 
         else:
-            message.reply_text("No log channel has been set yet!")
+            message.reply_text("Канал логов еще не установлен!")
 
 
     def __stats__():
-        return "{} log channels set.".format(sql.num_logchannels())
+        return "{} канал с логами установлен.".format(sql.num_logchannels())
 
 
     def __migrate__(old_chat_id, new_chat_id):
@@ -139,19 +139,19 @@ if is_module_loaded(FILENAME):
             log_channel_info = dispatcher.bot.get_chat(log_channel)
             return "This group has all it's logs sent to: {} (`{}`)".format(escape_markdown(log_channel_info.title),
                                                                             log_channel)
-        return "No log channel is set for this group!"
+        return "Для этой группы не задан канал с логами!"
 
 
     __help__ = """
 *Admin only:*
-- /logchannel: get log channel info
-- /setlog: set the log channel.
-- /unsetlog: unset the log channel.
+- /logchannel: Получить информацию о текущем лог канале
+- /setlog: Установить канал для логирования.
+- /unsetlog: Отключить канал для логирования.
 
-Setting the log channel is done by:
-- adding the bot to the desired channel (as an admin!)
-- sending /setlog in the channel
-- forwarding the /setlog to the group
+Настройка канала для логирования:
+- Добавление бота в канал (Как админа!)
+- Отправка `/setlog` в канал
+- Пересылка отправленного сообщения `/setlog` в группе
 """
 
     __mod_name__ = "Log Channels"
